@@ -13,13 +13,13 @@ Schritte:
 
 
 def user_input_animal():
-    user_input = input("Type in animal name: ")
+    user_input = input("Type in animal name: ").strip()
     return user_input
 
 
 def create_API_URL():
     name = user_input_animal()
-    return API_URL.format(name)
+    return API_URL.format(name), name
 
 
 #2. HTML Template Loader
@@ -58,12 +58,19 @@ def safe_to_file(text, file_name):
 
 
 def main():
-    response = requests.get(create_API_URL(), headers={'X-Api-Key': API_KEY})
+    url, name = create_API_URL()
+    response = requests.get(url, headers={'X-Api-Key': API_KEY})
 
     if response.status_code == requests.codes.ok:
         animals = response.json()  # 1. "animals" enthält deine Tierdaten (Liste von Dictionaries)
+        print("Anzahl Tiere:", len(animals))
         template = load_html_template("animals_template.html")  # 2. "template" enthält den kompletten HTML-Text aus deiner Datei animals_template.html.
-        animal_info = show_info(animals)  # <-- nutzt deine alten Funktionen
+
+        if animals:  # Liste NICHT leer
+            animal_info = show_info(animals)
+        else:  # Liste ist leer
+            animal_info = f"<h2>The animal \"{name}\" doesn't exist.</h2>"
+
         final_html = template.replace("__REPLACE_ANIMALS_INFO__", animal_info) # 5.
         safe_to_file(final_html, "animals.html")
         print("Website successfully generated!")
