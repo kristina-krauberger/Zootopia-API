@@ -1,7 +1,6 @@
 import requests
 
-NAME = 'Fox'
-API_URL = 'https://api.api-ninjas.com/v1/animals?name={}'.format(NAME)
+API_URL = 'https://api.api-ninjas.com/v1/animals?name={}'
 API_KEY = 'S5Nz5En+THigkRyssS/X2g==kVACdK74PDq57ZM6'
 
 
@@ -11,6 +10,17 @@ Schritte:
 2. HTML-Template-Datei gelesen und Inhalt in eine Variable gespeichert
 3. API-Antwort parsen (z.B. animals = response.json()) und HTML-Code für jedes Tier generieren)
 """
+
+
+def user_input_animal():
+    user_input = input("Type in animal name: ")
+    return user_input
+
+
+def create_API_URL():
+    name = user_input_animal()
+    return API_URL.format(name)
+
 
 #2. HTML Template Loader
 def load_html_template(file_name):
@@ -48,7 +58,7 @@ def safe_to_file(text, file_name):
 
 
 def main():
-    response = requests.get(API_URL, headers={'X-Api-Key': API_KEY})
+    response = requests.get(create_API_URL(), headers={'X-Api-Key': API_KEY})
 
     if response.status_code == requests.codes.ok:
         animals = response.json()  # 1. "animals" enthält deine Tierdaten (Liste von Dictionaries)
