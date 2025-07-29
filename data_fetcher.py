@@ -1,8 +1,10 @@
 import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()  # Loads the environment variables
 
+API_KEY = os.getenv('API_KEY')
 API_URL = 'https://api.api-ninjas.com/v1/animals?name={}'
-API_KEY = 'S5Nz5En+THigkRyssS/X2g==kVACdK74PDq57ZM6'
-
 
 def create_api_url(name):
     return API_URL.format(name), name
